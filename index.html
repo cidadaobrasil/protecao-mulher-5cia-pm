@@ -94,11 +94,12 @@
      já que agora cada um vive dentro de um cartão .tabpane em vez de ser a página inteira. */
   .tabpane > div:first-child[id^="tab"],
   .tabpane{ }
-  #tab1, #tab2, #tab3, #tab4, #tab5, #tab6{
+  #tab1, #tab2, #tab3, #tab4, #tab5, #tab6, #tab7{
     max-width: none !important;
     margin: 0 !important;
     padding: 22px 20px 34px !important;
   }
+  #tab7{ padding: 0 !important; }
   @media (max-width: 640px){
     #tab1, #tab2, #tab3, #tab4, #tab5, #tab6{ padding: 16px 14px 28px !important; }
     .app-header .titulo-app{ font-size: 12.5px; }
@@ -1124,6 +1125,43 @@
 #tab6 .item{ padding: 9px 10px; gap: 8px; }
 #tab6 .botoes button{ margin: 4px 3px; }
 }
+
+/* ===== 7_POP_001_2026_Procedimento_Operacional.html (tab7) ===== */
+#tab7 *{box-sizing:border-box}
+#tab7 body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#222;background:#f2f5f9;line-height:1.6}
+#tab7 header{background:#0b3d6d;color:white;padding:22px 32px;text-align:center}
+#tab7 header h1, #tab7 header h2, #tab7 header p{margin:6px 0}
+#tab7 .container{max-width:1200px;margin:0 auto;background:white;min-height:100vh}
+#tab7 .subtabs{display:flex;flex-wrap:wrap;background:#dfe8f5;border-bottom:2px solid #0b3d6d;position:sticky;top:0;z-index:10}
+#tab7 .subtabs button{flex:1;min-width:150px;border:0;padding:14px 10px;cursor:pointer;background:#dfe8f5;color:#0b3d6d;font-weight:bold;font-size:13px}
+#tab7 .subtabs button:hover{background:#c9daf0}
+#tab7 .subtabs button.active{background:white;border-bottom:4px solid #0b3d6d}
+#tab7 .subtabcontent{display:none;padding:36px 46px}
+#tab7 .subtabcontent.active{display:block}
+#tab7 h1, #tab7 h2, #tab7 h3{color:#0b3d6d}
+#tab7 table{width:100%;border-collapse:collapse;margin:16px 0 24px 0}
+#tab7 table, #tab7 th, #tab7 td{border:1px solid #555}
+#tab7 th{background:#d9e7f7;text-align:left}
+#tab7 th, #tab7 td{padding:8px;vertical-align:top}
+#tab7 .box{border-left:6px solid #0b3d6d;background:#f5f8fc;padding:15px;margin:20px 0}
+#tab7 .alerta{border-left:6px solid #c77b00;background:#fff8e8;padding:15px;margin:20px 0}
+#tab7 .critico{border-left:6px solid #b30000;background:#fdeaea;padding:15px;margin:20px 0}
+#tab7 .aviso-origem{border-left:6px solid #6a1fb3;background:#f3ecfa;padding:15px;margin:20px 0;font-size:13.5px}
+#tab7 .checklist{columns:2;-webkit-columns:2}
+#tab7 pre{background:#f5f8fc;border-left:6px solid #0b3d6d;padding:18px;white-space:pre-wrap;font-family:Arial,Helvetica,sans-serif;text-align:center;font-size:16px}
+#tab7 .footer{margin-top:50px;padding-top:20px;border-top:1px solid #ccc;font-size:12px;color:#666}
+@media (max-width:600px){
+#tab7 .subtabs button{min-width:110px;font-size:11.5px;padding:10px 6px}
+#tab7 .subtabcontent{padding:18px 16px}
+#tab7 .checklist{columns:1;-webkit-columns:1}
+#tab7 pre{font-size:13px;padding:12px}
+}
+@media print{
+#tab7 body{background:white}
+#tab7 .subtabs{display:none}
+#tab7 .subtabcontent{display:block;page-break-after:always}
+#tab7 .container{max-width:none}
+}
 </style>
 </head>
 <body>
@@ -1137,6 +1175,7 @@
     <button class="tabbtn" data-target="tab4" onclick="mostrarAba('tab4', this)">Mudanças da Norma<small>NI 26 x NI 21</small></button>
     <button class="tabbtn" data-target="tab5" onclick="mostrarAba('tab5', this)">Plano de Adequação<small>Retaguarda administrativa</small></button>
     <button class="tabbtn" data-target="tab6" onclick="mostrarAba('tab6', this)">Verificações Pendentes<small>Antes de publicar</small></button>
+    <button class="tabbtn" data-target="tab7" onclick="mostrarAba('tab7', this)">POP Operacional<small>Fases táticas e fiscalização</small></button>
     </nav>
   </div>
 
@@ -1863,6 +1902,102 @@
   atualizarProgresso();
 </script>
   </section>
+
+  <section id="tab7" class="tabpane">
+<div class="container">
+<header><h1>SECRETARIA DA SEGURANÇA PÚBLICA</h1><h1>POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</h1><h2>2º BPM/I – 5ª COMPANHIA DE POLÍCIA MILITAR</h2><p><strong>PROCEDIMENTO OPERACIONAL PADRÃO — POP Nº 001/2026</strong></p><p>Atendimento às Ocorrências de Violência Doméstica e Familiar Contra a Mulher</p><p>Baseado na Nota de Instrução PM3-001/02/26</p></header>
+<nav class="subtabs">
+<button class="subtablink active" onclick="openSubTab(event,'capa')">Capa e Controle</button><button class="subtablink" onclick="openSubTab(event,'fundamentos')">Fundamentos</button><button class="subtablink" onclick="openSubTab(event,'competencias')">Competências</button><button class="subtablink" onclick="openSubTab(event,'procedimento')">Procedimento</button><button class="subtablink" onclick="openSubTab(event,'checklists')">Checklists</button><button class="subtablink" onclick="openSubTab(event,'fiscalizacao')">Fiscalização</button>
+</nav>
+<section id="capa" class="subtabcontent active">
+<div class="aviso-origem"><strong>Nota sobre a origem deste POP:</strong> este documento traz um procedimento tático detalhado (fases de abordagem, matriz de decisão, checklist de fiscalização) que complementa, mas vai além do texto literal da NI nº PM3-001/02/26. As fases operacionais, a matriz de risco e as metas de indicador desta aba refletem prática policial consolidada e boas práticas de atendimento à violência doméstica, não uma transcrição da norma — por isso o próprio documento já se classifica como "Minuta para revisão e aprovação" do Comandante. Os únicos indicadores oficiais da NI (Indicador 01 e 02, Anexo B) estão detalhados na aba "Mudanças da Norma".</div>
+<h1>Controle Documental</h1><table><tr><th>Documento</th><td>POP 001/2026</td></tr><tr><th>Título</th><td>Atendimento às Ocorrências de Violência Doméstica e Familiar Contra a Mulher</td></tr><tr><th>Versão</th><td>1.0</td></tr><tr><th>Situação</th><td>Minuta para revisão e aprovação</td></tr><tr><th>Base Normativa</th><td>Nota de Instrução PM3-001/02/26</td></tr><tr><th>Elaboração</th><td>5ª Companhia de Polícia Militar</td></tr><tr><th>Aprovação</th><td>Comandante da 5ª Companhia de Polícia Militar</td></tr><tr><th>Próxima Revisão</th><td>Quando houver alteração normativa ou determinação superior.</td></tr></table>
+<h1>Finalidade</h1><p>Estabelecer procedimentos operacionais padronizados para o atendimento das ocorrências de violência doméstica e familiar contra a mulher no âmbito da 5ª Companhia de Polícia Militar, assegurando atuação uniforme, técnica, humanizada e alinhada às diretrizes institucionais da Polícia Militar do Estado de São Paulo.</p>
+<div class="box"><strong>Objetivos Estratégicos</strong><ul><li>Proteger a vida e a integridade física da vítima.</li><li>Reduzir a revitimização.</li><li>Padronizar registros e documentos.</li><li>Fortalecer a prevenção e a atuação da Patrulha Maria da Penha.</li><li>Melhorar a integração com a rede municipal de proteção.</li></ul></div>
+<h1>Abrangência</h1><p>Aplica-se a todo policial militar pertencente ou empregado operacionalmente pela 5ª Companhia de Polícia Militar, abrangendo Guararapes, Valparaíso, Bento de Abreu e Rubiácea.</p></section>
+<section id="fundamentos" class="subtabcontent">
+<h1>Fundamentação</h1><p>Este POP fundamenta-se na Nota de Instrução PM3-001/02/26 e nos atos normativos nela referenciados, especialmente aqueles referentes à proteção da mulher, atendimento humanizado, policiamento ostensivo e integração com a rede de proteção.</p>
+<table><tr><th>Norma</th><th>Objeto</th></tr><tr><td>Lei nº 11.340/2006</td><td>Lei Maria da Penha.</td></tr><tr><td>Lei nº 14.149/2021</td><td>Formulário Nacional de Avaliação de Risco — FONAR.</td></tr><tr><td>Lei Estadual nº 17.260/2020</td><td>Patrulha Maria da Penha.</td></tr><tr><td>Resolução Conjunta SSP/SPM nº 01/2023</td><td>Sistema SP Mulher.</td></tr><tr><td>Lei nº 14.994/2024</td><td>Pacote Antifeminicídio.</td></tr><tr><td>NI PM3-001/02/26</td><td>Sistemática de Proteção à Mulher e Defesa contra a Violência Doméstica e Familiar.</td></tr></table>
+<h1>Princípios Norteadores</h1><div class="box"><ul><li>Proteção da vida.</li><li>Legalidade.</li><li>Dignidade da pessoa humana.</li><li>Atendimento humanizado.</li><li>Não revitimização.</li><li>Intervenção proporcional.</li><li>Prioridade absoluta à segurança da vítima.</li><li>Integração com a rede de proteção.</li><li>Preservação dos direitos fundamentais.</li></ul></div>
+<div class="alerta"><strong>Atenção:</strong> a presença policial na residência da vítima pode gerar risco de retaliação pelo agressor. O contato posterior, inclusive Visita Solidária, deve considerar a segurança da vítima e a forma de comunicação mais adequada.</div></section>
+<section id="competencias" class="subtabcontent">
+<h1>Competências</h1><h2>Comandante da Companhia</h2><ul><li>Implantar e revisar este POP.</li><li>Fiscalizar sua execução.</li><li>Promover capacitação do efetivo.</li><li>Determinar ajustes conforme realidade operacional da Companhia.</li></ul><h2>CGP / CFP</h2><ul><li>Orientar as equipes durante o serviço.</li><li>Fiscalizar ocorrências sensíveis.</li><li>Verificar qualidade documental.</li><li>Acompanhar indicadores operacionais.</li></ul><h2>Comandantes de Grupo</h2><ul><li>Repassar orientações antes do serviço.</li><li>Fiscalizar o atendimento das ocorrências.</li><li>Sanar dúvidas das equipes.</li></ul><h2>Equipes Operacionais</h2><ul><li>Executar integralmente este POP.</li><li>Garantir atendimento humanizado.</li><li>Preservar direitos da vítima.</li><li>Produzir documentação completa e cronológica.</li></ul>
+<h1>Fluxo Operacional Geral</h1><pre>COPOM
+↓
+Despacho da Viatura
+↓
+Chegada ao Local
+↓
+Garantia da Segurança
+↓
+Separação das Partes
+↓
+Avaliação Inicial
+↓
+Providências Policiais
+↓
+Encaminhamento ao Distrito Policial, quando cabível
+↓
+Registro Documental
+↓
+FONAR
+↓
+SP Mulher
+↓
+Visita Solidária
+↓
+Acompanhamento</pre>
+<div class="critico"><strong>Pontos críticos:</strong><ul><li>Jamais minimizar relatos da vítima.</li><li>Jamais tentar promover conciliação entre vítima e agressor durante o atendimento.</li><li>Não presumir inexistência de risco pela ausência de lesões aparentes.</li><li>Considerar histórico de violência e possibilidade de escalada para feminicídio.</li></ul></div></section>
+<section id="procedimento" class="subtabcontent">
+<h1>Procedimento Operacional</h1><h2>Fase 1 — Despacho da Ocorrência</h2><p>Antes do deslocamento, a equipe deverá obter do COPOM o máximo de informações possível.</p><div class="checklist"><p>□ Endereço correto.</p><p>□ Nome da solicitante.</p><p>□ Agressor no local.</p><p>□ Agressor armado.</p><p>□ Crianças presentes.</p><p>□ Medida protetiva conhecida.</p><p>□ Histórico anterior.</p><p>□ Necessidade de apoio.</p></div>
+<h2>Fase 2 — Deslocamento</h2><ul><li>Planejar aproximação segura.</li><li>Evitar exposição desnecessária.</li><li>Solicitar apoio se houver risco elevado.</li><li>Definir funções de cada policial.</li></ul>
+<h2>Fase 3 — Chegada ao Local</h2><table><tr><th>Prioridade</th><th>Providência</th></tr><tr><td>1</td><td>Eliminar risco imediato.</td></tr><tr><td>2</td><td>Controlar agressor.</td></tr><tr><td>3</td><td>Proteger vítima.</td></tr><tr><td>4</td><td>Proteger crianças e demais vulneráveis.</td></tr><tr><td>5</td><td>Preservar provas.</td></tr></table>
+<h2>Fase 4 — Controle do Cenário</h2><ul><li>Separar imediatamente vítima e agressor.</li><li>Realizar busca pessoal quando necessária.</li><li>Apreender armas.</li><li>Verificar existência de crianças, idosos ou pessoas vulneráveis.</li><li>Jamais iniciar entrevistas antes de controlar completamente o ambiente.</li></ul>
+<h2>Fase 5 — Atendimento à Vítima</h2><p>O atendimento deverá ocorrer em local reservado, sem presença do agressor, com linguagem respeitosa, sem julgamentos e sem responsabilizar a vítima.</p><div class="box"><strong>Perguntas prioritárias:</strong><ul><li>O agressor ainda representa risco?</li><li>Já ocorreram agressões anteriores?</li><li>Existe medida protetiva?</li><li>Existem armas na residência?</li><li>Há crianças expostas?</li><li>Há ameaça de morte?</li><li>Existe violência sexual, patrimonial, moral ou psicológica?</li><li>A vítima deseja acolhimento institucional?</li></ul></div>
+<h2>Fase 6 — Avaliação de Risco</h2><table><tr><th>Indicador</th><th>Atenção</th></tr><tr><td>Ameaça de morte</td><td>Alta prioridade.</td></tr><tr><td>Estrangulamento anterior</td><td>Risco extremo.</td></tr><tr><td>Posse de arma</td><td>Risco elevado.</td></tr><tr><td>Separação recente</td><td>Eleva risco.</td></tr><tr><td>Ciúmes obsessivos</td><td>Eleva risco.</td></tr><tr><td>Descumprimento de MPU</td><td>Risco crítico.</td></tr><tr><td>Violência contra filhos</td><td>Máxima atenção.</td></tr></table>
+<h2>Fase 7 — Providências Policiais</h2><div class="checklist"><p>□ Flagrante delito analisado.</p><p>□ Descumprimento de MPU verificado.</p><p>□ Prisão, se cabível.</p><p>□ Encaminhamento ao Distrito Policial.</p><p>□ Atendimento médico, se necessário.</p><p>□ Provas preservadas.</p><p>□ Testemunhas identificadas.</p><p>□ Crianças protegidas.</p></div>
+<h2>Fase 8 — Documentação</h2><div class="checklist"><p>□ BOPM.</p><p>□ BO eletrônico.</p><p>□ FONAR.</p><p>□ SP Mulher, quando aplicável.</p><p>□ Narrativa cronológica.</p><p>□ Qualificação completa.</p><p>□ Aceitação ou recusa da Visita Solidária.</p><p>□ Telefones atualizados.</p></div>
+<h2>Fase 9 — Orientação à Vítima</h2><ul><li>Orientar sobre medidas protetivas.</li><li>Orientar sobre rede municipal de proteção.</li><li>Orientar sobre Patrulha Maria da Penha.</li><li>Informar canais de emergência.</li><li>Orientar retorno imediato à Polícia Militar em caso de nova ameaça.</li></ul><h2>Fase 10 — Encerramento</h2><div class="critico">A ocorrência somente deverá ser considerada encerrada após conferência integral da documentação e adoção das providências previstas neste POP.</div></section>
+<section id="checklists" class="subtabcontent">
+<h1>Matriz de Decisão Operacional</h1><table><tr><th>Situação Encontrada</th><th>Providência</th></tr><tr><td>Violência em andamento</td><td>Intervenção imediata para cessar a agressão.</td></tr><tr><td>Flagrante delito</td><td>Prisão conforme legislação vigente.</td></tr><tr><td>Descumprimento de Medida Protetiva</td><td>Condução imediata ao Distrito Policial.</td></tr><tr><td>Necessidade médica</td><td>Acionar SAMU ou conduzir ao hospital.</td></tr><tr><td>Criança em risco</td><td>Acionar Conselho Tutelar quando cabível.</td></tr><tr><td>Idoso vulnerável</td><td>Acionar rede de proteção competente.</td></tr><tr><td>Violência psicológica sem lesão</td><td>Registrar integralmente e encaminhar conforme orientação da Autoridade Policial.</td></tr></table>
+<h1>Fluxograma Operacional</h1><pre>COPOM
+↓
+Despacho
+↓
+Chegada
+↓
+Segurança
+↓
+Separação das Partes
+↓
+Avaliação Inicial
+↓
+Existe flagrante?
+↓
+SIM → Prisão → Distrito Policial → BO → FONAR → SP Mulher → Visita Solidária → Encerramento
+NÃO → Atendimento → Orientações → BO → FONAR → SP Mulher → Visita Solidária → Encerramento</pre>
+<h1>Checklist de Bolso da Guarnição</h1><div class="checklist"><p>□ Ambiente seguro.</p><p>□ Agressor controlado.</p><p>□ Vítima protegida.</p><p>□ Crianças verificadas.</p><p>□ Armas apreendidas.</p><p>□ Atendimento médico.</p><p>□ Medida protetiva consultada.</p><p>□ Flagrante analisado.</p><p>□ BO confeccionado.</p><p>□ FONAR preenchido.</p><p>□ SP Mulher atualizado.</p><p>□ Visita Solidária registrada.</p><p>□ Orientações prestadas.</p><p>□ Telefones conferidos.</p><p>□ Fotos anexadas.</p></div>
+<h1>Erros Críticos</h1><div class="critico"><ul><li>Minimizar o relato da vítima.</li><li>Tentar promover reconciliação.</li><li>Questionar a credibilidade da vítima.</li><li>Expor dados pessoais.</li><li>Deixar de preencher o FONAR quando obrigatório.</li><li>Esquecer de registrar a Visita Solidária.</li><li>Ignorar ameaças sem lesão física.</li><li>Desconsiderar histórico de violência.</li><li>Encerrar a ocorrência sem conferir a documentação.</li></ul></div>
+<h1>Boas Práticas</h1><div class="box"><ul><li>Escutar mais do que falar.</li><li>Registrar exatamente o que foi relatado.</li><li>Separar vítima e agressor.</li><li>Utilizar linguagem respeitosa.</li><li>Manter postura técnica.</li><li>Registrar horários.</li><li>Preservar provas.</li><li>Fotografar lesões quando possível e permitido.</li><li>Registrar testemunhas.</li><li>Atualizar todos os sistemas.</li></ul></div></section>
+<section id="fiscalizacao" class="subtabcontent">
+<h1>Checklist do CGP / CFP</h1><table><tr><th>Item Fiscalizado</th><th>Conforme</th></tr><tr><td>Narrativa completa</td><td>□ Sim □ Não</td></tr><tr><td>Qualificação completa</td><td>□ Sim □ Não</td></tr><tr><td>FONAR preenchido</td><td>□ Sim □ Não</td></tr><tr><td>Visita Solidária registrada</td><td>□ Sim □ Não</td></tr><tr><td>Campos obrigatórios completos</td><td>□ Sim □ Não</td></tr><tr><td>Providências legais adotadas</td><td>□ Sim □ Não</td></tr><tr><td>Vítima orientada</td><td>□ Sim □ Não</td></tr><tr><td>Rede de proteção acionada quando necessária</td><td>□ Sim □ Não</td></tr></table>
+<h1>Indicadores da 5ª Cia PM<span style="font-size:12px;color:#6a1fb3;font-weight:normal"> — propostos, complementares aos 2 indicadores oficiais do Anexo B</span></h1><table><tr><th>Indicador</th><th>Meta / Controle</th></tr><tr><td>FONAR preenchido</td><td>100% dos casos aplicáveis.</td></tr><tr><td>Campos obrigatórios completos</td><td>100%.</td></tr><tr><td>Tempo médio de atendimento</td><td>Acompanhar mensalmente.</td></tr><tr><td>Ocorrências auditadas</td><td>100% das ocorrências de violência doméstica.</td></tr><tr><td>Visitas Solidárias realizadas</td><td>Monitoramento contínuo.</td></tr></table>
+<h1>Responsabilidades Administrativas</h1><table><tr><th>Função</th><th>Responsabilidade</th></tr><tr><td>Comandante da Companhia</td><td>Revisão anual do POP e deliberação sobre ajustes.</td></tr><tr><td>CGP / CFP</td><td>Fiscalização permanente.</td></tr><tr><td>P/3</td><td>Controle estatístico e indicadores.</td></tr><tr><td>Instrutores</td><td>Capacitação continuada.</td></tr><tr><td>Efetivo Operacional</td><td>Cumprimento integral deste POP.</td></tr></table>
+<h1>Disposições Finais</h1><div class="box">Este Procedimento Operacional Padrão deverá ser objeto de instrução periódica, reciclagem anual e atualização sempre que houver alteração legislativa ou normativa relacionada à proteção da mulher e ao atendimento das ocorrências de violência doméstica e familiar.</div>
+<br><br><p style="text-align:center">_____________________________________<br>CAP PM<br>Comandante da 5ª Companhia de Polícia Militar</p><div class="footer">Material técnico de apoio à decisão. Minuta sujeita à revisão, ajuste e eventual aprovação pelo Comandante da 5ª Cia PM.</div></section>
+</div>
+<script>
+function openSubTab(evt, tabName){
+  var container = evt.currentTarget.closest('.container');
+  var tabcontent = container.getElementsByClassName("subtabcontent");
+  for(var i=0;i<tabcontent.length;i++){ tabcontent[i].classList.remove("active"); }
+  var tablinks = container.getElementsByClassName("subtablink");
+  for(var i=0;i<tablinks.length;i++){ tablinks[i].classList.remove("active"); }
+  document.getElementById(tabName).classList.add("active");
+  evt.currentTarget.classList.add("active");
+}
+</script>
+  </section>
   </main>
 
   <div class="rodape-site">5ª Companhia de Polícia Militar (2º BPM/I) · Documentos de apoio à implantação da NI nº PM3-001/02/26 · Uso interno</div>
@@ -1873,6 +2008,7 @@
     document.querySelectorAll('.tabbtn').forEach(function(b){ b.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
+    if(btn.scrollIntoView){ btn.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'}); }
     window.scrollTo({top:0, behavior:'smooth'});
     if(history.replaceState){ history.replaceState(null, '', '#'+id); }
   }
