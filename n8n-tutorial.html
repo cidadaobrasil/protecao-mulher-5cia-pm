@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>n8n do Zero — Aula Completa</title>
+<meta name="description" content="Aula completa e interativa de n8n para quem nunca ouviu falar da ferramenta: conceitos, interface, primeiro workflow, expressões, lógica, webhooks, exemplo prático e quiz.">
+<style>
+  :root{
+    --bg: #0f1117;
+    --bg-elev: #171a23;
+    --bg-card: #1d2130;
+    --border: #2a2f42;
+    --text: #e9ebf3;
+    --text-dim: #9aa1b8;
+    --accent: #ff6d5a;
+    --accent-2: #ea4560;
+    --accent-soft: rgba(255,109,90,.15);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --radius: 14px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a{ color: var(--accent); }
+  code, .mono{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  /* Header */
+  .app-header{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(135deg, #1a1030 0%, #2a0f22 60%, #170b18 100%);
+    padding: calc(10px + var(--safe-top)) 16px 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,.35);
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .brand-badge{
+    width: 34px; height:34px; border-radius:9px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:15px; color:#fff; flex-shrink:0;
+  }
+  .brand-text{ min-width:0; }
+  .brand-text .t1{ font-size:15px; font-weight:800; letter-spacing:.2px; }
+  .brand-text .t2{ font-size:11.5px; color:var(--text-dim); }
+
+  .progress-wrap{
+    max-width:720px; margin: 10px auto 0;
+    display:flex; align-items:center; gap:8px;
+  }
+  .progress-bar{
+    flex:1; height:6px; border-radius:99px; background: rgba(255,255,255,.08); overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius:99px;
+    transition: width .4s ease;
+  }
+  .progress-pct{ font-size:11px; color:var(--text-dim); font-variant-numeric: tabular-nums; width:34px; text-align:right;}
+
+  .tabbar{
+    max-width: 720px;
+    margin: 10px auto 0;
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 10px;
+  }
+  .tabbar::-webkit-scrollbar{ display:none; }
+  .tab{
+    flex: 0 0 auto;
+    font-size:12.5px;
+    font-weight:600;
+    color: var(--text-dim);
+    background: rgba(255,255,255,.05);
+    border: 1px solid transparent;
+    padding: 8px 12px;
+    border-radius: 99px;
+    white-space: nowrap;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .tab .n{
+    width:16px;height:16px;border-radius:50%;
+    background: rgba(255,255,255,.1);
+    font-size:9.5px; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .tab.done .n{ background: var(--ok); color:#04241a; }
+  .tab.active{
+    color:#fff;
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  /* Main content */
+  main{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px 16px calc(90px + var(--safe-bottom));
+  }
+  .panel{ display:none; animation: fadein .25s ease; }
+  .panel.active{ display:block; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+  .hero{
+    background: linear-gradient(160deg, #241236, #300f1c);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .hero h1{ margin:0 0 6px; font-size: 21px; }
+  .hero p{ margin:0; color: var(--text-dim); font-size:14px; }
+  .lesson-num{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 3px 9px;
+    border-radius: 99px;
+    margin-bottom: 8px;
+    letter-spacing:.3px;
+  }
+  h2.section-title{
+    font-size: 19px;
+    margin: 0 0 4px;
+  }
+  .subtitle{
+    color: var(--text-dim);
+    font-size: 13.5px;
+    margin: 0 0 16px;
+  }
+
+  .card{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 15px;
+    margin-bottom: 12px;
+  }
+  .card h3{ margin: 0 0 8px; font-size: 15px; display:flex; align-items:center; gap:8px;}
+  .card p{ margin: 0 0 8px; font-size: 14px; color: var(--text); }
+  .card p:last-child{ margin-bottom:0; }
+  .card ul, .card ol{ margin: 6px 0; padding-left: 20px; font-size:14px; }
+  .card li{ margin-bottom:6px; }
+  .icon-circle{
+    width:30px;height:30px;border-radius:8px;
+    background: var(--accent-soft);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px; flex-shrink:0;
+  }
+
+  .analogy{
+    border-left: 3px solid var(--accent);
+    background: rgba(255,109,90,.07);
+    padding: 10px 12px;
+    border-radius: 0 10px 10px 0;
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 10px 0;
+  }
+  .analogy b{ color: var(--accent); }
+
+  .tag-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .tag{
+    font-size: 11.5px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    padding: 4px 9px;
+    border-radius: 99px;
+    color: var(--text-dim);
+  }
+
+  pre.code-block{
+    background: #0b0d13;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 13px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height:1.55;
+    margin: 8px 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  pre.code-block .k{ color:#ff9d8a; }
+  pre.code-block .s{ color:#8fd6ff; }
+  pre.code-block .c{ color:#6b7280; }
+  pre.code-block .fn{ color:#c3a6ff; }
+
+  .flow{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    overflow-x:auto;
+    padding: 6px 2px 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .flow-node{
+    flex: 0 0 auto;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 11px;
+    font-size: 12px;
+    font-weight:600;
+    white-space:nowrap;
+    text-align:center;
+  }
+  .flow-node.trigger{ border-color: var(--accent); color: var(--accent); }
+  .flow-node.decision{ border-color: var(--warn); color: var(--warn); }
+  .flow-arrow{ color: var(--text-dim); font-size:14px; flex:0 0 auto;}
+
+  table.cmp{
+    width:100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  table.cmp th, table.cmp td{
+    border: 1px solid var(--border);
+    padding: 8px 9px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.cmp th{
+    background: var(--bg-elev);
+    font-size:12px;
+    color: var(--text-dim);
+  }
+
+  details.acc{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  details.acc summary{
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  details.acc summary::-webkit-details-marker{ display:none; }
+  details.acc summary .chev{ transition: transform .2s ease; color:var(--accent); flex-shrink:0;}
+  details.acc[open] summary .chev{ transform: rotate(90deg); }
+  details.acc .acc-body{ padding: 0 14px 14px; font-size: 14px; color: var(--text); }
+  details.acc .acc-body p{ margin: 0 0 8px; }
+  details.acc .acc-body ul{ margin:6px 0; padding-left:20px; }
+  details.acc .acc-body li{ margin-bottom:6px; }
+
+  .step-list{ list-style:none; margin:0; padding:0; counter-reset: step; }
+  .step-list li{
+    counter-increment: step;
+    position: relative;
+    padding: 8px 0 8px 34px;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .step-list li:last-child{ border-bottom:none; }
+  .step-list li::before{
+    content: counter(step);
+    position:absolute; left:0; top:8px;
+    width:24px;height:24px;border-radius:7px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color:#fff; font-size:12px; font-weight:800;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .complete-row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .mark-done{
+    display:flex; align-items:center; gap:8px;
+    font-size: 13.5px; font-weight:700; color: var(--text-dim);
+    cursor:pointer; user-select:none;
+    padding: 9px 13px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .mark-done.on{ color:#04241a; background: var(--ok); border-color: var(--ok); }
+  .mark-done .box{
+    width:16px;height:16px;border-radius:5px;border:2px solid currentColor;
+    display:flex;align-items:center;justify-content:center; font-size:11px;
+  }
+
+  .nav-btns{ display:flex; gap:8px; }
+  .nav-btn{
+    font-size:13px; font-weight:700;
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    color: var(--text);
+    cursor:pointer;
+  }
+  .nav-btn.primary{
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+    color: #fff;
+  }
+  .nav-btn:disabled{ opacity:.35; }
+
+  /* Quiz */
+  .quiz-q{ margin-bottom: 16px; }
+  .quiz-q p.q-text{ font-weight:700; font-size:14.5px; margin: 0 0 8px;}
+  .quiz-opt{
+    display:block; width:100%; text-align:left;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    margin-bottom: 7px;
+    cursor:pointer;
+  }
+  .quiz-opt.correct{ border-color: var(--ok); background: rgba(52,211,153,.12); }
+  .quiz-opt.wrong{ border-color: var(--bad); background: rgba(248,113,113,.12); }
+  .quiz-opt:disabled{ opacity:.85; }
+  .quiz-result{
+    text-align:center; padding: 16px; border-radius: var(--radius);
+    background: var(--bg-card); border:1px solid var(--border); font-weight:700;
+    display:none;
+  }
+
+  .res-link{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding: 12px 13px; border-radius: 10px;
+    background: var(--bg-elev); border:1px solid var(--border);
+    margin-bottom: 8px; text-decoration:none; color: var(--text);
+    font-size: 13.5px;
+  }
+  .res-link span.arrow{ color: var(--accent); font-size:16px; }
+
+  .badge-ok{ color: var(--ok); }
+  .badge-warn{ color: var(--warn); }
+  .badge-bad{ color: var(--bad); }
+
+  ::selection{ background: var(--accent-soft); }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand-row">
+    <div class="brand-badge">n8n</div>
+    <div class="brand-text">
+      <div class="t1">n8n do Zero</div>
+      <div class="t2">Aula completa e interativa de automação</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+  <nav class="tabbar" id="tabbar"></nav>
+</header>
+
+<main id="main"></main>
+
+<script>
+const LESSONS = [
+  {
+    id: "inicio",
+    short: "Início",
+    title: "O que é o n8n?",
+    tag: "Introdução",
+    render: () => `
+      <div class="hero">
+        <span class="lesson-num">AULA 1 DE 12</span>
+        <h1>O que é o n8n?</h1>
+        <p>Se você nunca ouviu falar, relaxa: no fim desta aula você vai entender exatamente o que é, pra que serve e por que tanta gente usa.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">⚙️</span> Definição simples</h3>
+        <p><b>n8n</b> (lê-se "n-eight-n", vem de "node-mation") é uma ferramenta de <b>automação de fluxos de trabalho</b>. Ela conecta aplicativos, sites e serviços diferentes para que eles conversem entre si <b>automaticamente</b>, sem você precisar ficar copiando e colando informação de um lugar pro outro.</p>
+        <p>Você monta a automação <b>visualmente</b>, arrastando e ligando caixinhas na tela — sem precisar (na maioria dos casos) escrever código.</p>
+      </div>
+
+      <div class="analogy">
+        <b>Analogia da esteira de fábrica:</b> imagine uma linha de produção. Em cada estação, um trabalhador faz uma tarefa específica (corta, pinta, embala) e passa o produto adiante. No n8n, cada "estação" é uma caixinha chamada <b>node</b>, e o "produto" que passa de uma pra outra é um <b>dado</b> (uma informação).
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">💡</span> Exemplos do dia a dia</h3>
+        <ul>
+          <li>Alguém preenche um formulário no seu site → uma mensagem cai automaticamente no seu WhatsApp/Telegram.</li>
+          <li>Todo dia às 8h da manhã → o n8n busca dados numa planilha e te manda um resumo por e-mail.</li>
+          <li>Chegou um e-mail novo com anexo → o anexo é salvo sozinho no Google Drive.</li>
+          <li>Um cliente compra algo na sua loja online → os dados vão automaticamente pro seu CRM e uma nota fiscal é gerada.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🆚</span> "Isso não é tipo o Zapier?"</h3>
+        <p>É parecido em conceito (ambos automatizam tarefas conectando apps), mas o n8n se destaca por:</p>
+        <div class="tag-row">
+          <span class="tag">Open source</span>
+          <span class="tag">Pode rodar no seu próprio servidor</span>
+          <span class="tag">Lógica mais avançada (IF, loops, código)</span>
+          <span class="tag">Sem cobrar "por execução"</span>
+          <span class="tag">+400 integrações prontas</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🎯</span> O que você vai aprender aqui</h3>
+        <p>Este tutorial tem 12 aulas curtas. Vamos do zero absoluto até você entender como montar um workflow real, incluindo conceitos, interface, expressões, lógica condicional, webhooks e boas práticas. No final tem um quiz pra testar o que aprendeu.</p>
+      </div>
+    `
+  },
+  {
+    id: "conceitos",
+    short: "Conceitos",
+    title: "Conceitos Básicos",
+    tag: "Fundamentos",
+    render: () => `
+      <span class="lesson-num">AULA 2 DE 12</span>
+      <h2 class="section-title">Conceitos Básicos</h2>
+      <p class="subtitle">Seis palavras que aparecem o tempo todo no n8n. Domine elas e o resto fica fácil.</p>
+
+      <details class="acc" open>
+        <summary>🔗 Workflow <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>É o <b>fluxo inteiro</b> da automação: o conjunto de todas as caixinhas conectadas que, juntas, realizam uma tarefa completa. Cada automação que você cria é um workflow separado.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>🧩 Node <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>Cada <b>caixinha/bloco</b> no fluxo. Um node faz uma ação só: buscar um dado, enviar uma mensagem, transformar um texto, tomar uma decisão etc. Um workflow é basicamente vários nodes ligados em sequência.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>⚡ Trigger (Gatilho) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>É o node especial que <b>inicia</b> o workflow. Sempre é o primeiro da fila. Pode ser: clicar num botão manualmente, um horário agendado, uma chamada de outro sistema (webhook), ou um evento de app (ex: "quando chega e-mail novo").</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>➰ Connection (Conexão) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>É a <b>linha</b> que liga a saída de um node à entrada do próximo. Ela define a ordem de execução e por onde o dado vai passar.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>📜 Execution (Execução) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>Toda vez que o workflow roda (seja manual ou automático), isso gera uma <b>execução</b> — um registro com o que aconteceu em cada node: quais dados entraram, quais saíram, e se deu erro em algum ponto. Fica salvo no histórico pra você consultar depois.</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>🔑 Credentials (Credenciais) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>São as <b>chaves de acesso</b> (login, senha, token de API) que ficam guardadas de forma segura dentro do n8n para que os nodes consigam se conectar a serviços externos, como Gmail, Slack ou Google Sheets, sem você digitar a senha toda hora.</p>
+        </div>
+      </details>
+
+      <div class="analogy">
+        <b>Resumo:</b> um <b>Trigger</b> dispara o <b>Workflow</b>, que é formado por vários <b>Nodes</b> ligados por <b>Connections</b>. Cada vez que ele roda, isso vira uma <b>Execution</b>, e os nodes usam <b>Credentials</b> pra acessar outros apps com segurança.
+      </div>
+    `
+  },
+  {
+    id: "acesso",
+    short: "Acesso",
+    title: "Como Acessar o n8n",
+    tag: "Primeiros passos",
+    render: () => `
+      <span class="lesson-num">AULA 3 DE 12</span>
+      <h2 class="section-title">Como Acessar o n8n</h2>
+      <p class="subtitle">Duas formas de usar: na nuvem (mais fácil) ou no seu próprio servidor (mais controle).</p>
+
+      <table class="cmp">
+        <tr><th></th><th>n8n Cloud</th><th>Self-hosted</th></tr>
+        <tr><td>O que é</td><td>Versão hospedada pela própria n8n</td><td>Você instala e roda por conta própria</td></tr>
+        <tr><td>Instalação</td><td>Nenhuma, cria conta no site</td><td>Precisa de Docker/servidor</td></tr>
+        <tr><td>Custo</td><td>Pago (tem teste grátis)</td><td>Gratuito (open source)</td></tr>
+        <tr><td>Ideal para</td><td>Começar rápido, sem mexer com servidor</td><td>Privacidade total dos dados e uso ilimitado</td></tr>
+      </table>
+
+      <div class="card">
+        <h3><span class="icon-circle">☁️</span> Opção 1: n8n Cloud</h3>
+        <p>Acesse o site oficial do n8n, crie uma conta gratuita de teste e pronto — você já cai direto no editor, sem instalar nada. É a forma mais simples de começar a praticar hoje mesmo.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🐳</span> Opção 2: Self-hosted com Docker</h3>
+        <p>Se você tem um pouco de familiaridade com terminal, pode rodar o n8n localmente com um único comando:</p>
+        <pre class="code-block"><span class="c"># roda o n8n na porta 5678</span>
+docker run -it --rm \\
+  --name n8n \\
+  -p 5678:5678 \\
+  -v n8n_data:/home/node/.n8n \\
+  docker.n8n.io/n8nio/n8n</pre>
+        <p>Depois é só abrir <code>http://localhost:5678</code> no navegador e criar seu usuário administrador.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">📦</span> Opção 3: via npx (rápido, sem Docker)</h3>
+        <pre class="code-block">npx n8n</pre>
+        <p>Isso baixa e roda o n8n temporariamente na sua máquina — ótimo pra só testar rapidinho.</p>
+      </div>
+
+      <div class="analogy">
+        <b>Dica sobre celular:</b> o painel do n8n é todo web, então dá pra abrir pelo navegador do celular. Mas montar workflows complexos é mais confortável no computador — no celular, use mais para acompanhar execuções e receber alertas.
+      </div>
+    `
+  },
+  {
+    id: "interface",
+    short: "Interface",
+    title: "Conhecendo a Interface",
+    tag: "Editor",
+    render: () => `
+      <span class="lesson-num">AULA 4 DE 12</span>
+      <h2 class="section-title">Conhecendo a Interface</h2>
+      <p class="subtitle">Antes de criar seu primeiro workflow, veja onde fica cada coisa na tela do editor.</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">🖼️</span> Canvas</h3>
+        <p>É a área central, em branco (ou com grade), onde os nodes aparecem. Você arrasta os nodes livremente para organizar visualmente o fluxo.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">➕</span> Adicionar node</h3>
+        <p>Clique no botão <b>"+"</b> (dentro do canvas ou saindo da bolinha de conexão de um node) e uma busca abre para você escolher o próximo node — por nome do app ou tipo de ação.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🔍</span> NDV — Node Detail View</h3>
+        <p>Ao dar duplo clique em um node, abre um painel com <b>3 colunas</b>:</p>
+        <ul>
+          <li><b>Input</b> — o dado que chega de quem veio antes.</li>
+          <li><b>Parâmetros</b> — as configurações daquele node (o que ele deve fazer).</li>
+          <li><b>Output</b> — o resultado, depois de rodar.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">▶️</span> Execute Workflow</h3>
+        <p>Botão no rodapé do canvas. Roda o workflow inteiro uma vez, do início ao fim, para você testar. Cada node executado ganha uma marquinha verde (sucesso) ou vermelha (erro).</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🟢</span> Toggle "Active"</h3>
+        <p>Fica no canto superior. Quando ligado, o workflow passa a rodar sozinho em produção (por exemplo, ficando ouvindo um webhook 24h, ou respeitando um agendamento). Antes de ativar, o workflow só roda quando você aperta "Execute" manualmente.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">📁</span> Barra lateral</h3>
+        <ul>
+          <li><b>Overview</b> — lista de todos os seus workflows.</li>
+          <li><b>Credentials</b> — onde ficam guardadas as senhas/tokens de conexão.</li>
+          <li><b>Executions</b> — histórico de tudo que já rodou, com detalhes pra debugar erros.</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: "primeiro",
+    short: "1º Workflow",
+    title: "Seu Primeiro Workflow",
+    tag: "Prática",
+    render: () => `
+      <span class="lesson-num">AULA 5 DE 12</span>
+      <h2 class="section-title">Seu Primeiro Workflow</h2>
+      <p class="subtitle">Vamos montar, passo a passo, a automação mais simples possível — só pra pegar o jeito do ciclo básico.</p>
+
+      <div class="flow">
+        <div class="flow-node trigger">🖱️ Manual Trigger</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">✏️ Edit Fields (Set)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">✅ Resultado</div>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🛠️</span> Passo a passo</h3>
+        <ul class="step-list">
+          <li>Crie um workflow novo e clique em <b>"Add first step"</b>. Escolha <b>"Trigger manually"</b> — ele inicia o fluxo quando você aperta um botão, ótimo para testes.</li>
+          <li>Clique no <b>"+"</b> à direita do trigger e busque o node <b>"Edit Fields (Set)"</b>. Ele serve para criar ou editar campos de dado.</li>
+          <li>Dentro do node, adicione um campo: nome <code>mensagem</code>, valor <code>Olá, este é meu primeiro workflow!</code></li>
+          <li>Clique em <b>"Execute Workflow"</b>. Os dois nodes devem ficar com uma marca verde.</li>
+          <li>Clique no node "Edit Fields" e veja a aba <b>Output</b>: vai aparecer o JSON <code>{ "mensagem": "Olá, este é meu primeiro workflow!" }</code></li>
+        </ul>
+      </div>
+
+      <pre class="code-block"><span class="c">// Isso é o que aparece no Output do node Edit Fields</span>
+{
+  <span class="s">"mensagem"</span>: <span class="s">"Olá, este é meu primeiro workflow!"</span>
+}</pre>
+
+      <div class="analogy">
+        <b>Parabéns!</b> Você acabou de completar o ciclo básico de toda automação no n8n: <b>Trigger → Processa → Resultado</b>. Todo workflow, por mais complexo que seja, é só essa ideia repetida várias vezes com mais nodes no meio.
+      </div>
+    `
+  },
+  {
+    id: "nodes",
+    short: "Tipos de Nodes",
+    title: "Tipos de Nodes",
+    tag: "Blocos de construção",
+    render: () => `
+      <span class="lesson-num">AULA 6 DE 12</span>
+      <h2 class="section-title">Tipos de Nodes</h2>
+      <p class="subtitle">Existem centenas de nodes, mas todos se encaixam em 3 categorias.</p>
+
+      <details class="acc" open>
+        <summary>⚡ Trigger nodes (sempre o primeiro) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li><b>Manual Trigger</b> — você aperta um botão pra rodar.</li>
+            <li><b>Schedule Trigger</b> — roda em horários fixos (ex: "todo dia às 9h", parecido com um cron).</li>
+            <li><b>Webhook</b> — cria uma URL que, quando chamada por outro sistema, dispara o workflow na hora.</li>
+            <li><b>App Trigger</b> — eventos de apps específicos, como "quando chega e-mail novo no Gmail".</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>🧱 Core / Regular nodes (lógica e dados) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li><b>HTTP Request</b> — chama qualquer API do mundo, mesmo sem node pronto pra ela.</li>
+            <li><b>Edit Fields (Set)</b> — cria ou edita campos de dado.</li>
+            <li><b>IF</b> — decide entre dois caminhos (verdadeiro/falso).</li>
+            <li><b>Switch</b> — decide entre vários caminhos possíveis.</li>
+            <li><b>Merge</b> — junta dados vindos de dois ramos diferentes.</li>
+            <li><b>Filter</b> — deixa passar só os itens que atendem uma condição.</li>
+            <li><b>Code</b> — quando precisar de mais controle, escreve JavaScript (ou Python) puro.</li>
+            <li><b>Loop Over Items</b> — processa os dados em lotes menores.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary>🔌 App nodes (integrações prontas) <span class="chev">▶</span></summary>
+        <div class="acc-body">
+          <p>Mais de 400 integrações prontas com serviços conhecidos, cada uma já com as ações mais comuns configuradas (enviar mensagem, criar linha, ler arquivo etc.):</p>
+          <div class="tag-row">
+            <span class="tag">Gmail</span><span class="tag">Slack</span><span class="tag">Telegram</span>
+            <span class="tag">Google Sheets</span><span class="tag">Notion</span><span class="tag">WhatsApp Business</span>
+            <span class="tag">Discord</span><span class="tag">Airtable</span><span class="tag">MySQL/Postgres</span>
+          </div>
+        </div>
+      </details>
+    `
+  },
+  {
+    id: "expressoes",
+    short: "Expressões",
+    title: "Expressões e Dados",
+    tag: "O coração do n8n",
+    render: () => `
+      <span class="lesson-num">AULA 7 DE 12</span>
+      <h2 class="section-title">Expressões e Dados</h2>
+      <p class="subtitle">Isto é o que faz um node "conversar" com o resultado de outro. É a parte que mais assusta no começo — mas é simples.</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">📦</span> Tudo é uma lista de "items"</h3>
+        <p>O dado que viaja entre nodes é sempre uma <b>lista de items</b>, e cada item é um objeto <b>JSON</b> (pares de chave e valor). Por exemplo, se um node busca clientes, o resultado pode ser uma lista de 3 items, cada um com <code>nome</code>, <code>email</code> etc.</p>
+      </div>
+
+      <pre class="code-block">[
+  { <span class="s">"nome"</span>: <span class="s">"Maria"</span>, <span class="s">"idade"</span>: 30 },
+  { <span class="s">"nome"</span>: <span class="s">"João"</span>, <span class="s">"idade"</span>: 22 }
+]</pre>
+
+      <div class="card">
+        <h3><span class="icon-circle">✨</span> Usando dado de outro node</h3>
+        <p>Em qualquer campo de qualquer node, clique no ícone de expressão (ou digite <code>{{ }}</code>) para inserir um valor dinâmico vindo do node anterior:</p>
+        <pre class="code-block"><span class="c">// pega o campo "nome" do item atual</span>
+Olá <span class="fn">{{ $json.nome }}</span>, tudo bem?
+
+<span class="c">// pega dado de um node específico, por nome</span>
+<span class="fn">{{ $('Buscar Cliente').item.json.email }}</span>
+
+<span class="c">// data e hora atuais</span>
+<span class="fn">{{ $now }}</span>
+
+<span class="c">// posição do item dentro de um loop</span>
+<span class="fn">{{ $itemIndex }}</span></pre>
+      </div>
+
+      <div class="analogy">
+        <b>Exemplo real:</b> se o node anterior devolveu <code>{ "nome": "Maria", "idade": 30 }</code>, no próximo node você pode escrever: <code>Olá {{ $json.nome }}, você tem {{ $json.idade }} anos.</code> — e o n8n substitui automaticamente pelo valor real: "Olá Maria, você tem 30 anos."
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">📌</span> Pin Data (dica de produtividade)</h3>
+        <p>Durante os testes, você pode "fixar" (pin) o resultado de um node para não precisar rodar a chamada de API de verdade toda vez que testar o resto do workflow. Economiza tempo e evita gastar limites de API à toa.</p>
+      </div>
+    `
+  },
+  {
+    id: "logica",
+    short: "Lógica",
+    title: "Lógica e Fluxo",
+    tag: "Controlando o caminho dos dados",
+    render: () => `
+      <span class="lesson-num">AULA 8 DE 12</span>
+      <h2 class="section-title">Lógica e Fluxo</h2>
+      <p class="subtitle">Nem todo workflow é uma linha reta. Às vezes você precisa decidir caminhos, juntar dados ou repetir passos.</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">🔀</span> IF — decisão simples</h3>
+        <p>Separa o fluxo em <b>duas saídas</b>: verdadeiro (true) e falso (false), com base numa condição.</p>
+        <div class="flow">
+          <div class="flow-node">📄 Dado recebido</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node decision">❓ IF idade ≥ 18</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node">✅ Maior de idade</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🔁</span> Switch — múltiplos caminhos</h3>
+        <p>Parecido com o IF, mas roteia para <b>várias saídas</b> conforme o valor de um campo. Exemplo: por "categoria" do chamado → urgente, normal ou baixa prioridade, cada um seguindo para uma ação diferente.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🔗</span> Merge — junta dados</h3>
+        <p>Combina dois fluxos que se separaram em um só, seja juntando por posição, por uma chave em comum, ou simplesmente anexando um atrás do outro.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🧹</span> Filter — descarta o que não interessa</h3>
+        <p>Deixa passar só os itens que atendem a uma condição; o resto é descartado. Diferente do IF, aqui não existe "saída falsa" — os itens reprovados simplesmente somem.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">📦</span> Loop Over Items</h3>
+        <p>Processa uma lista grande de itens em <b>lotes menores</b>, um de cada vez ou em grupos — muito usado para não estourar limites de chamadas de uma API externa.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">💻</span> Code node</h3>
+        <p>Quando os nodes prontos não dão conta de uma transformação mais específica, o node <b>Code</b> permite escrever <b>JavaScript</b> (ou Python) puro para manipular os dados como você quiser.</p>
+      </div>
+    `
+  },
+  {
+    id: "webhooks",
+    short: "Webhooks",
+    title: "Webhooks",
+    tag: "Recebendo dados de fora",
+    render: () => `
+      <span class="lesson-num">AULA 9 DE 12</span>
+      <h2 class="section-title">Webhooks</h2>
+      <p class="subtitle">A forma mais poderosa de disparar um workflow: deixando uma "porta" aberta pra outros sistemas avisarem o n8n.</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">🌐</span> O que é um webhook?</h3>
+        <p>Ao adicionar o node <b>Webhook</b> como trigger, o n8n gera uma <b>URL única</b> (algo como <code>https://seu-n8n.com/webhook/abc123</code>). Qualquer sistema externo — um formulário do seu site, outro app, uma automação de terceiros — pode enviar uma requisição <b>POST</b> (com dados) para essa URL, e isso <b>dispara o workflow instantaneamente</b>, já com os dados recebidos disponíveis para os próximos nodes.</p>
+      </div>
+
+      <div class="analogy">
+        <b>Analogia:</b> é como dar seu número de telefone pra alguém te avisar assim que algo acontecer, em vez de você ficar checando de tempos em tempos se aconteceu.
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🧪</span> Modo Test x Modo Production</h3>
+        <ul>
+          <li><b>Test URL</b> — funciona só enquanto você está com o editor aberto esperando uma chamada, útil para testar antes de publicar.</li>
+          <li><b>Production URL</b> — passa a valer de verdade assim que o workflow está <b>ativado</b> (toggle "Active" ligado), funcionando 24 horas.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">↩️</span> Respond to Webhook</h3>
+        <p>Por padrão, o n8n já responde algo simples pra quem chamou o webhook. Mas você pode adicionar o node <b>Respond to Webhook</b> em qualquer ponto do fluxo para devolver uma resposta customizada (por exemplo, um JSON de confirmação para o site que enviou o formulário).</p>
+      </div>
+
+      <pre class="code-block"><span class="c">// exemplo de payload que um formulário poderia enviar ao webhook</span>
+{
+  <span class="s">"nome"</span>: <span class="s">"Ana Souza"</span>,
+  <span class="s">"email"</span>: <span class="s">"ana@email.com"</span>,
+  <span class="s">"mensagem"</span>: <span class="s">"Quero mais informações"</span>,
+  <span class="s">"urgente"</span>: <span class="k">true</span>
+}</pre>
+    `
+  },
+  {
+    id: "exemplo",
+    short: "Exemplo",
+    title: "Exemplo Prático Completo",
+    tag: "Juntando tudo",
+    render: () => `
+      <span class="lesson-num">AULA 10 DE 12</span>
+      <h2 class="section-title">Exemplo Prático Completo</h2>
+      <p class="subtitle">Vamos juntar tudo que vimos num cenário realista, de ponta a ponta.</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">🎬</span> Cenário</h3>
+        <p>"Toda vez que alguém preenche o formulário de contato no meu site, quero receber um aviso no Telegram e também salvar os dados numa planilha do Google Sheets. Se o cliente marcar a mensagem como urgente, quero que caia num grupo diferente do Telegram."</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-node trigger">🌐 Webhook</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node decision">❓ IF urgente?</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">📲 Telegram (urgente)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">🔗 Merge</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">📊 Google Sheets</div>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🛠️</span> Como seria montado</h3>
+        <ul class="step-list">
+          <li><b>Webhook</b> recebe o POST do formulário do site com <code>nome</code>, <code>email</code>, <code>mensagem</code> e <code>urgente</code>.</li>
+          <li><b>IF</b> verifica a condição <code>{{ $json.urgente }} é igual a true</code>.</li>
+          <li>Ramo <b>verdadeiro</b>: node <b>Telegram → Send Message</b> envia para o grupo de urgências, usando <code>{{ $json.nome }}</code> e <code>{{ $json.mensagem }}</code> no texto.</li>
+          <li>Ramo <b>falso</b>: node <b>Telegram → Send Message</b> envia para o grupo normal.</li>
+          <li>Um node <b>Merge</b> reúne os dois ramos de volta em um só fluxo.</li>
+          <li>Node <b>Google Sheets → Append Row</b> grava uma nova linha na planilha com os dados recebidos.</li>
+        </ul>
+      </div>
+
+      <pre class="code-block"><span class="c">// texto da mensagem no node Telegram, usando expressões</span>
+📩 Nova mensagem de <span class="fn">{{ $json.nome }}</span>
+✉️ <span class="fn">{{ $json.email }}</span>
+💬 <span class="fn">{{ $json.mensagem }}</span></pre>
+
+      <div class="analogy">
+        <b>Percebeu?</b> Esse workflow inteiro usa só ideias que você já aprendeu: um <b>Trigger</b> (Webhook), uma <b>decisão</b> (IF), <b>integrações</b> prontas (Telegram, Google Sheets) e <b>expressões</b> pra levar o dado certo pro lugar certo.
+      </div>
+    `
+  },
+  {
+    id: "publicar",
+    short: "Publicar",
+    title: "Publicar e Boas Práticas",
+    tag: "Colocando em produção",
+    render: () => `
+      <span class="lesson-num">AULA 11 DE 12</span>
+      <h2 class="section-title">Publicar e Boas Práticas</h2>
+      <p class="subtitle">Seu workflow está pronto. Agora, como colocá-lo pra rodar de verdade e sem sustos?</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">🟢</span> Ativando o workflow</h3>
+        <p>Ligue o toggle <b>"Active"</b> no topo do editor. A partir daí, o trigger (webhook, agendamento, etc.) passa a funcionar sozinho, 24 horas por dia, sem precisar do editor aberto.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">📜</span> Acompanhando execuções</h3>
+        <p>Na aba <b>Executions</b>, você vê o histórico de todas as vezes que o workflow rodou — com sucesso ou com erro — e pode clicar em cada uma pra ver exatamente o que aconteceu em cada node. Essencial pra debugar.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🚨</span> Error Workflow</h3>
+        <p>Você pode configurar um <b>workflow separado</b> para rodar automaticamente sempre que outro workflow falhar — por exemplo, mandando um alerta no Slack avisando "o workflow X falhou". Assim você fica sabendo na hora, sem precisar checar manualmente.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">✅</span> Boas práticas</h3>
+        <ul>
+          <li>Dê <b>nomes descritivos</b> aos nodes (ex: "Enviar aviso urgente" em vez de "Telegram1").</li>
+          <li>Use <b>Sticky Notes</b> no canvas para documentar partes complexas do fluxo.</li>
+          <li>Use <b>Pin Data</b> durante testes para não gastar chamadas de API reais repetidamente.</li>
+          <li>Nunca deixe senhas ou tokens escritos direto num node <b>Code</b> — sempre use <b>Credentials</b>.</li>
+          <li>Comece pequeno: teste cada trecho do workflow antes de conectar o próximo node.</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: "quiz",
+    short: "Quiz",
+    title: "Quiz Final",
+    tag: "Teste seus conhecimentos",
+    render: () => `
+      <span class="lesson-num">AULA 12 DE 12</span>
+      <h2 class="section-title">Quiz Final</h2>
+      <p class="subtitle">6 perguntas rápidas pra você conferir o que absorveu. Toque numa resposta para ver se acertou.</p>
+      <div id="quizArea"></div>
+      <div class="quiz-result" id="quizResult"></div>
+    `
+  },
+  {
+    id: "recursos",
+    short: "Recursos",
+    title: "Para Continuar Aprendendo",
+    tag: "Próximos passos",
+    render: () => `
+      <span class="lesson-num">EXTRA</span>
+      <h2 class="section-title">Para Continuar Aprendendo</h2>
+      <p class="subtitle">Parabéns por chegar até aqui! Aqui vão os melhores lugares pra continuar evoluindo.</p>
+
+      <div class="card">
+        <h3><span class="icon-circle">📚</span> Onde aprofundar</h3>
+        <a class="res-link" href="https://docs.n8n.io" target="_blank" rel="noopener">
+          <span>Documentação oficial (docs.n8n.io)</span><span class="arrow">↗</span>
+        </a>
+        <a class="res-link" href="https://n8n.io/workflows" target="_blank" rel="noopener">
+          <span>Biblioteca com +2000 templates prontos</span><span class="arrow">↗</span>
+        </a>
+        <a class="res-link" href="https://community.n8n.io" target="_blank" rel="noopener">
+          <span>Fórum da comunidade</span><span class="arrow">↗</span>
+        </a>
+        <a class="res-link" href="https://n8n.io" target="_blank" rel="noopener">
+          <span>Site oficial do n8n</span><span class="arrow">↗</span>
+        </a>
+      </div>
+
+      <div class="card">
+        <h3><span class="icon-circle">🚀</span> Seu próximo passo</h3>
+        <ul class="step-list">
+          <li>Crie uma conta gratuita (n8n Cloud) ou suba o n8n localmente com Docker.</li>
+          <li>Vá até a biblioteca de templates e importe um workflow simples pronto.</li>
+          <li>Abra-o, entenda cada node, e tente modificar algo pequeno (um texto, uma condição).</li>
+          <li>Só depois disso, comece a criar um workflow seu do zero, resolvendo um problema real do seu dia a dia.</li>
+        </ul>
+      </div>
+
+      <div class="analogy">
+        <b>Lembre-se:</b> ninguém decora tudo de primeira. O jeito de aprender n8n de verdade é praticando com automações pequenas e reais — não tentando entender 100% da teoria antes de abrir o editor.
+      </div>
+    `
+  }
+];
+
+const QUIZ = [
+  {
+    q: "O que é um 'Trigger' no n8n?",
+    opts: [
+      "O node que inicia o workflow",
+      "O histórico de execuções",
+      "A senha guardada para um app externo",
+      "A linha que conecta dois nodes"
+    ],
+    correct: 0
+  },
+  {
+    q: "Qual a diferença principal entre n8n Cloud e self-hosted?",
+    opts: [
+      "O self-hosted não tem nodes de integração",
+      "O n8n Cloud é hospedado pela n8n; o self-hosted você instala e roda por conta própria",
+      "Não existe diferença",
+      "O n8n Cloud só funciona no celular"
+    ],
+    correct: 1
+  },
+  {
+    q: "Para usar o valor de um campo do node anterior dentro de outro node, você usa:",
+    opts: [
+      "Um comando de terminal",
+      "Colar o valor manualmente sempre",
+      "Uma expressão, como {{ $json.campo }}",
+      "Isso não é possível no n8n"
+    ],
+    correct: 2
+  },
+  {
+    q: "Qual node você usaria para separar o fluxo em 'verdadeiro' e 'falso' com base numa condição?",
+    opts: ["Merge", "IF", "Webhook", "Filter"],
+    correct: 1
+  },
+  {
+    q: "O que acontece quando você ativa o toggle 'Active' de um workflow?",
+    opts: [
+      "O workflow é apagado",
+      "Ele passa a rodar automaticamente em produção (ex: webhook 24h, agendamento)",
+      "Ele só roda uma vez",
+      "Nada muda"
+    ],
+    correct: 1
+  },
+  {
+    q: "Qual node cria uma URL para que sistemas externos disparem o workflow enviando dados?",
+    opts: ["Schedule Trigger", "Edit Fields (Set)", "Webhook", "Code"],
+    correct: 2
+  }
+];
+
+let progress = {};
+try{ progress = JSON.parse(localStorage.getItem('n8n-tutorial-progress') || '{}'); }catch(e){ progress = {}; }
+let currentIndex = 0;
+let quizAnswered = new Array(QUIZ.length).fill(false);
+let quizScore = 0;
+
+function saveProgress(){
+  localStorage.setItem('n8n-tutorial-progress', JSON.stringify(progress));
+}
+
+function renderTabs(){
+  const tabbar = document.getElementById('tabbar');
+  tabbar.innerHTML = LESSONS.map((l, i) => `
+    <div class="tab ${progress[l.id] ? 'done' : ''} ${i === currentIndex ? 'active' : ''}" data-i="${i}">
+      <span class="n">${progress[l.id] ? '✓' : (i+1)}</span>${l.short}
+    </div>
+  `).join('');
+  Array.from(tabbar.children).forEach(el => {
+    el.addEventListener('click', () => goTo(parseInt(el.dataset.i)));
+  });
+}
+
+function updateProgressBar(){
+  const total = LESSONS.length;
+  const done = LESSONS.filter(l => progress[l.id]).length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function renderPanel(){
+  const lesson = LESSONS[currentIndex];
+  const main = document.getElementById('main');
+  const isDone = !!progress[lesson.id];
+  main.innerHTML = `
+    <div class="panel active">
+      ${lesson.render()}
+      <div class="complete-row">
+        <div class="mark-done ${isDone ? 'on' : ''}" id="markDoneBtn">
+          <span class="box">${isDone ? '✓' : ''}</span>
+          ${isDone ? 'Aula concluída' : 'Marcar como concluída'}
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn" id="prevBtn" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+          <button class="nav-btn primary" id="nextBtn" ${currentIndex === LESSONS.length - 1 ? 'disabled' : ''}>Próxima →</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('markDoneBtn').addEventListener('click', () => {
+    progress[lesson.id] = !progress[lesson.id];
+    saveProgress();
+    renderTabs();
+    updateProgressBar();
+    renderPanel();
+  });
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  if(prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+  if(nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+
+  if(lesson.id === 'quiz'){
+    renderQuiz();
+  }
+
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+}
+
+function goTo(i){
+  if(i < 0 || i >= LESSONS.length) return;
+  currentIndex = i;
+  renderTabs();
+  renderPanel();
+  const activeTab = document.querySelector('.tab.active');
+  if(activeTab) activeTab.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+}
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  area.innerHTML = QUIZ.map((item, qi) => `
+    <div class="card quiz-q" data-qi="${qi}">
+      <p class="q-text">${qi+1}. ${item.q}</p>
+      ${item.opts.map((opt, oi) => `<button class="quiz-opt" data-qi="${qi}" data-oi="${oi}">${opt}</button>`).join('')}
+    </div>
+  `).join('');
+
+  area.querySelectorAll('.quiz-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const qi = parseInt(btn.dataset.qi);
+      const oi = parseInt(btn.dataset.oi);
+      if(quizAnswered[qi]) return;
+      quizAnswered[qi] = true;
+      const card = area.querySelector(`.quiz-q[data-qi="${qi}"]`);
+      const opts = card.querySelectorAll('.quiz-opt');
+      opts.forEach(o => o.disabled = true);
+      if(oi === QUIZ[qi].correct){
+        btn.classList.add('correct');
+        quizScore++;
+      } else {
+        btn.classList.add('wrong');
+        opts[QUIZ[qi].correct].classList.add('correct');
+      }
+      checkQuizDone();
+    });
+  });
+}
+
+function checkQuizDone(){
+  if(quizAnswered.every(Boolean)){
+    progress['quiz'] = true;
+    saveProgress();
+    renderTabs();
+    updateProgressBar();
+    const result = document.getElementById('quizResult');
+    result.style.display = 'block';
+    let msg = '';
+    if(quizScore === QUIZ.length) msg = `🎉 Mandou muito bem! ${quizScore}/${QUIZ.length} — você entendeu os fundamentos do n8n!`;
+    else if(quizScore >= QUIZ.length - 2) msg = `👏 Boa! ${quizScore}/${QUIZ.length} acertos. Vale revisar as aulas dos itens que errou.`;
+    else msg = `📖 Você acertou ${quizScore}/${QUIZ.length}. Que tal revisar as aulas anteriores e tentar de novo?`;
+    result.textContent = msg;
+  }
+}
+
+renderTabs();
+updateProgressBar();
+renderPanel();
+</script>
+</body>
+</html>
